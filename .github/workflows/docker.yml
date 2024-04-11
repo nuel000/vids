@@ -1,0 +1,18 @@
+name: Run Playwright Script
+
+on:
+  push:
+    branches:
+      - main  # Or the branch you want to trigger the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Playwright Script
+        run: |
+          docker run nuel000/fb
