@@ -1,19 +1,34 @@
-name: Run Playwright Script
+name: Run Playwright script
 
 on:
-  push:
-    branches:
-      - main  # Or the branch you want to trigger the workflow
-  workflow_dispatch:  # Manual trigger
+  schedule:
+    - cron: '*/20 * * * *'  # Runs every 20 minutes
+  workflow_dispatch:  
 
 jobs:
-  build:
+  run-playwright:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run Playwright Script
-        run: |
-          docker run nuel000/fb
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Build Docker image
+        run: docker build -t my-playwright-app .
+
+      - name: Run Playwright script
+        run: docker run my-playwright-app
+
+      # Add steps to upload screenshots as artifacts
+      - name: Upload screenshots as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: |
+            screenshot_after_goto.png
+            screenshot_after_load.png
