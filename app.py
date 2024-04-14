@@ -1,4 +1,5 @@
 import requests
+import sys
 
 def run():
     url = "https://web.facebook.com/ads/library/?id=357741606925594"
@@ -13,6 +14,7 @@ def run():
     response_text = r.text
 
     print(response_text)
+    sys.stdout.flush()
 
 if __name__ == "__main__":
     run()
