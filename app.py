@@ -13,20 +13,21 @@ def run(playwright: Playwright) -> None:
     page = context.new_page()
     page.goto("https://accounts.google.com")
 
-    time.sleep(3)
-    flushstd("Navigated to Google account login page.")
     page.get_by_label("Email or phone").fill("momohemmanuel073")
-    flushstd("Email/phone field filled.")
+    flushstd("EmailFilled")
     time.sleep(3)
+    
     page.get_by_label("Email or phone").press("Enter")
-    flushstd("Pressed Enter for email/phone field.")
     time.sleep(3)
+    flushstd("Enter Pressed")
     page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
-    flushstd("Password field filled.")
+    flushstd("Pssword filled")
     time.sleep(3)
     page.get_by_label("Enter your password").press("Enter")
-    flushstd("Pressed Enter for password.")
+    flushstd("Emted pressed")
     time.sleep(6)
+
+    page.goto("https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en")
 
     page.goto("https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en")
     flushstd("Navigated to My Ad Center page.")
