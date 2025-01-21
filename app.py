@@ -9,7 +9,7 @@ def flushstd(message):
 
 def run(playwright: Playwright) -> None:
     try:
-        browser = playwright.firefox.launch(headless=True)
+        browser = playwright.webkit.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
         
