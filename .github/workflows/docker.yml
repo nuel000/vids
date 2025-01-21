@@ -21,7 +21,7 @@ jobs:
         pip install playwright beautifulsoup4
         
     - name: Install Playwright Browsers
-      run: playwright install firefox
+      run: playwright install webkit
       
     - name: Run Playwright Script
       run: python app.py
