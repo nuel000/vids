@@ -20,13 +20,10 @@ def run(playwright: Playwright) -> None:
     page.get_by_label("Email or phone").press("Enter")
     time.sleep(6)
     flushstd("Enter Pressed")
-    screenshot_path = "screenshot1.png"
+    screenshot_path = "screenshot.png"
     page.screenshot(path=screenshot_path)
     flushstd(f"Screenshot taken and saved as {screenshot_path}")
-    page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
-    screenshot_path = "screenshot2.png"
-    page.screenshot(path=screenshot_path)
-    flushstd(f"Screenshot taken and saved as {screenshot_path}")
+
     flushstd("Pssword filled")
     time.sleep(3)
     page.get_by_label("Enter your password").press("Enter")
