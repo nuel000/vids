@@ -25,4 +25,10 @@ jobs:
       run: playwright install
 
     - name: Run Playwright Script
-      run: python app.py
+      run: python your_script.py
+
+    - name: Upload Screenshot
+      uses: actions/upload-artifact@v3
+      with:
+        name: screenshot
+        path: screenshot.png  # Path to the screenshot file
