@@ -25,7 +25,7 @@ jobs:
       run: playwright install
 
     - name: Run Playwright Script
-      run: python aa.py
+      run: python app.py
 
     - name: Upload Screenshot
       uses: actions/upload-artifact@v3
