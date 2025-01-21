@@ -18,7 +18,7 @@ def run(playwright: Playwright) -> None:
         
         # Fill email
         email_input = page.get_by_label("Email or phone")
-        email_input.fill("momohemmanuel073")
+        
         flushstd("EmailFilled")
         time.sleep(3)
         
