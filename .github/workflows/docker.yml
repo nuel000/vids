@@ -1,34 +1,37 @@
 name: Playwright Automation
-
 on:
-  workflow_dispatch:  # Allows manual triggering of the workflow
+  workflow_dispatch:
 
 jobs:
   run-playwright:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
-
+      uses: actions/checkout@v4
+      
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.9'
-
+        
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install playwright beautifulsoup4
-
+        
     - name: Install Playwright Browsers
-      run: playwright install
-
+      run: playwright install firefox
+      
     - name: Run Playwright Script
       run: python app.py
-
-    - name: Upload Screenshot
-      uses: actions/upload-artifact@v3
+      
+    - name: Upload Screenshots
+      if: always()
+      uses: actions/upload-artifact@v4
       with:
-        name: screenshot
-        path: screenshot.png  # Path to the screenshot file
+        name: screenshots
+        path: |
+          screenshot.png
+          error_screenshot.png
+        retention-days: 30
