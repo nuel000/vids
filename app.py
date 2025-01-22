@@ -33,15 +33,7 @@ def run(playwright: Playwright) -> None:
 
         time.sleep(3)
         page1 = page1_info.value
-        page1.get_by_label("Email or phone").click()
-        page1.get_by_label("Email or phone").fill("momohemmanuel073")
-        page1.get_by_role("button", name="Next").click()
-        time.sleep(3)
-    
-        page1.get_by_label("Enter your password").click()
-        page1.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
-        time.sleep(3)
-        page1.get_by_role("button", name="Next").click()
+
         time.sleep(3)
         page1.close()
 
@@ -57,16 +49,7 @@ def run(playwright: Playwright) -> None:
         # time.sleep(3)
         # page.get_by_role("button", name="Log in with Google").click()
         # time.sleep(3)
-        # page.get_by_label("Email or phone").click()
-        # time.sleep(3)
-        # page.get_by_label("Email or phone").fill("momohemmanuel073")
-        # time.sleep(3)
-        # page.get_by_label("Email or phone").press("Enter")
-        # flushstd('Mail Enter Pressed')
-        # time.sleep(3)
-        # page.get_by_label("Enter your password").click()
-        # time.sleep(3)
-        # page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
+
         # flushstd('password filled')
         # time.sleep(3)
         # page.get_by_role("button", name="Next").click()
