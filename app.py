@@ -1,85 +1,61 @@
-import sys
-from playwright.sync_api import Playwright, sync_playwright
-import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
+import time
 
-def flushstd(message):
-    print(message)
-    sys.stdout.flush()
+def run():
+    # Set up Chrome options
+    chrome_options = Options()
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-notifications")
+    chrome_options.add_argument("--disable-popup-blocking")
+    chrome_options.add_argument("--start-maximized")
 
-def run(playwright: Playwright) -> None:
+    # Initialize WebDriver
+    driver = webdriver.Chrome(options=chrome_options)
+
     try:
+        # Navigate to Google login
+        driver.get("https://accounts.google.com")
+        time.sleep(3)
 
-        options = {
-        'args': [
-            '--disable-gpu',
-            '--disable-dev-shm-usage',
-            '--disable-setuid-sandbox',
-            '--no-first-run',
-            '--no-sandbox',
-            '--no-zygote',
-            '--ignore-certificate-errors',
-            '--disable-extensions',
-            '--disable-infobars',
-            '--disable-notifications',
-            '--disable-popup-blocking',
-            '--remote-debugging-port=9222',
-            '--disable-blink-features=AutomationControlled',
-        ]
-        }
+        # Fill in email/username
+        email_field = driver.find_element(By.CSS_SELECTOR, "input[type='email']")
+        email_field.send_keys("momohemmanuel073")
+        email_field.send_keys(Keys.ENTER)
+        time.sleep(3)
 
-        # Launch Chrome browser with options
-        browser = playwright.chromium.launch(**options, headless=True)
-        context = browser.new_context()
-        page = context.new_page()
-        page.goto("https://accounts.google.com")
-        
-        # Fill email
-        page.get_by_label("Email or phone").fill("momohemmanuel073")
-        time.sleep(3)
-        page.get_by_label("Email or phone").press("Enter")
-        flushstd("EmailFilled")
-        time.sleep(3)
-        s = BeautifulSoup(page.content(),'html.parser')
-        flushstd(s.text)
-        page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
-        flushstd("passFilled")
-        time.sleep(3)
-        page.get_by_label("Enter your password").press("Enter")
+        # Fill in password
+        password_field = driver.find_element(By.CSS_SELECTOR, "input[type='password']")
+        password_field.send_keys("Ilovemymummy22@@..")
+        password_field.send_keys(Keys.ENTER)
         time.sleep(6)
-        
-        # Take screenshot
-        screenshot_path = "screenshot.png"
-        page.screenshot(path=screenshot_path)
-        flushstd(f"Screenshot taken and saved as {screenshot_path}")
-        
 
-        
-        # Navigate to Ad Center
-        page.goto("https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en")
-        page.goto("https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en")
-        flushstd("Navigated to My Ad Center page.")
+        # Navigate to Google Ad Center page
+        driver.get("https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en")
         time.sleep(3)
-        
-        # Parse content
-        s = BeautifulSoup(page.content(), 'html.parser')
-        google_account_info = s.find('div', class_='KT87l').text if s.find('div', class_='KT87l') else "Info not found"
-        others = s.find('ul', class_='NBZP0e cIN7te xbmkib').text if s.find('ul', class_='NBZP0e cIN7te xbmkib') else "Others not found"
-        
-        flushstd(f"Google Account Info: {google_account_info}")
-        flushstd(f"Others: {others}")
-        
-    except Exception as e:
-        flushstd(f"An error occurred: {str(e)}")
-        # Take error screenshot if possible
-        try:
-            page.screenshot(path="error_screenshot.png")
-        except:
-            pass
+
+        # Extract content using BeautifulSoup
+        page_source = driver.page_source
+        soup = BeautifulSoup(page_source, 'html.parser')
+        google_account_info = soup.find('div', class_='KT87l')
+        others = soup.find('ul', class_='NBZP0e cIN7te xbmkib')
+
+        # Print extracted content
+        print(google_account_info.text if google_account_info else "No account info found")
+        print(others.text if others else "No other info found")
+
+        # Wait before closing
+        time.sleep(60)
+
     finally:
-        context.close()
-        browser.close()
+        # Close the browser
+        driver.quit()
 
 if __name__ == "__main__":
-    with sync_playwright() as playwright:
-        run(playwright)
+    run()
