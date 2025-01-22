@@ -29,9 +29,15 @@ def run(playwright: Playwright) -> None:
         time.sleep(3)
         page.get_by_role("button", name="Next").click()
         flushstd('NEXT CLICKED')
+
+        
         s= BeautifulSoup(page.content(),'html.parser')
         flushstd(s.text)
         time.sleep(3)
+        
+        page.get_by_label("Email or phone").fill("momohemmanuel073")
+        flushstd('eMAIL FILLED')
+        
         page.get_by_role("button", name="Next").click()
         flushstd('NEXT CLICKED')
         s= BeautifulSoup(page.content(),'html.parser')
