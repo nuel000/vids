@@ -15,7 +15,7 @@ def run(playwright: Playwright) -> None:
         context = browser.new_context()
         page = context.new_page()
         page.goto("https://stackoverflow.com/")
-        page.frame_locator("iframe[title=\"Sign in with Google Dialogue\"]").get_by_label("Close").click()
+   
         time.sleep(3)
         page.get_by_role("menuitem", name="Log in").click()
         time.sleep(3)
