@@ -10,13 +10,9 @@ def flushstd(message):
 def run(playwright: Playwright) -> None:
     try:
 
-        # Launch Chrome browser with options
-        browser = playwright.firefox.launch(headless=True)
-        context = browser.new_context()
-        page = context.new_page()
 
         browser = playwright.chromium.launch(
-        headless=False,  # Set headless to True if you don't want a visible browser
+        headless=True,  # Set headless to True if you don't want a visible browser
         args=[
             '--disable-blink-features=AutomationControlled',
             '--no-sandbox',  # May help in some environments
