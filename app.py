@@ -15,43 +15,51 @@ def run(playwright: Playwright) -> None:
         context = browser.new_context()
         page = context.new_page()
 
-        page.goto("https://stackoverflow.com/users/login?ssrc=head&returnurl=https%3a%2f%2fstackoverflow.com%2f")
+        browser = playwright.chromium.launch(
+        headless=False,  # Set headless to True if you don't want a visible browser
+        args=[
+            '--disable-blink-features=AutomationControlled',
+            '--no-sandbox',  # May help in some environments
+            '--disable-web-security',  # Not recommended for production use
+            '--disable-infobars',  # Prevent infobars
+            '--disable-extensions',  # Disable extensions
+            '--start-maximized',  # Start maximized
+            '--window-size=1280,720'  # Set a specific window size
+        ]
+        )  # Use headless=True for headless mode
+        context = browser.new_context()
+
+    # Open a new page in the configured context
+        page = context.new_page()
+
+    # Go to the desired URL
+        page.goto("https://stackoverflow.com/")  # Replace with the actual URL
+        time.sleep(3)
+        page.get_by_role("menuitem", name="Log in").click()
         time.sleep(3)
         page.get_by_role("button", name="Log in with Google").click()
         time.sleep(3)
-        page.goto("https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S-416685054%3A1737569744090319&client_id=717762328687-iludtf96g1hinl76e4lc1b9a82g457nn.apps.googleusercontent.com&ddm=1&o2v=1&redirect_uri=https%3A%2F%2Fstackauth.com%2Fauth%2Foauth2%2Fgoogle&response_type=code&scope=profile+email&service=lso&state=%7B%22sid%22%3A1%2C%22st%22%3A%2259%3A3%3A1b8%2C16%3A1fae7a5d566b956d%2C10%3A1737569743%2C16%3Ace5233fcf656064b%2C60d483648b30f7692962d4fc4f690dc9bc8f651e9b4dbc9a1d30471ddeedab26%22%2C%22cid%22%3A%22717762328687-iludtf96g1hinl76e4lc1b9a82g457nn.apps.googleusercontent.com%22%2C%22k%22%3A%22Google%22%2C%22ses%22%3A%2256c23cfc664341e59db72b7ff778770a%22%7D&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hANKe4FUH-0G7bVy6UP99fVD71h2--k2O3gJ54VFShMrd0OyJn2jh4gpn3N9OdeXCaHddrJl_bZNKSSJ09eOV0HSP8XTfOLT1lJK72V__AqU8MbaviiGkRsfiZkD3PH2RaLQuhvrd4QdXT24T8E3lKD6E_8O1iAHwqIh4KBoAusLxQGS8uTZZ8qaUchw7Q1i92VbWyBVdRaQYnRi-LmLlDAJXAERvPVyXlAiqAY1ORNS4DJVcsvWgcLHArS6Fwab83_lJBWGQR_Q59ebM-yx35yQ5SLxKuAMA4Orw-5dtHLGsziOoFVxZTgu8Yyb0AaeNT9AfpIjVeKI2i_sHIqqnAJUj8A6o15F1yjroPKcTFk-aeHA1Xg4gqyNbwp8l83MrV79V0nqPYdaG5c1kq9OMBjYr7eGO879X_sicPXNRXEH9_Dq6L8XQa6YmDeNTGwjgFj4rImPcKzi0_jUJ4kuU4V-iS8mKA%26flowName%3DGeneralOAuthFlow%26as%3DS-416685054%253A1737569744090319%26client_id%3D717762328687-iludtf96g1hinl76e4lc1b9a82g457nn.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Fstackauth.com&rart=ANgoxcdqFRKuGVsFMtkPnApJSgDrvnpZBV5j6JdRgFMn_ieB3PZ5FQw9gn2_kM105og_oZ-kkY1ttEGgQAwfasgZlM8xyhrLeDn2WwHDJCGDmjajqVekESA")
-        time.sleep(3)
         page.get_by_label("Email or phone").click()
+        time.sleep(3)
         page.get_by_label("Email or phone").fill("momohemmanuel073")
-        flushstd('eMAIL FILLED')
+        time.sleep(3)
+        flushstd('Email Fillled)
+        page.get_by_label("Email or phone").press("Enter")
+        time.sleep(3)
+        page.get_by_label("Enter your password").click()
+        time.sleep(3)
+        page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
+        flushstd('Passs Fillled)
         time.sleep(3)
         page.get_by_role("button", name="Next").click()
-        time.sleep(3)
-        page.get_by_role("button", name="Next").click()
-        flushstd('NEXT CLICKED')
+        page.goto("https://stackoverflow.com/")
 
         
         s= BeautifulSoup(page.content(),'html.parser')
         flushstd(s.text)
         time.sleep(3)
         
-        page.get_by_label("Email or phone").fill("momohemmanuel073")
-        flushstd('eMAIL FILLED')
-        
-        page.get_by_role("button", name="Next").click()
-        flushstd('NEXT CLICKED')
-        s= BeautifulSoup(page.content(),'html.parser')
-        flushstd(s.text)
-        
-        page.get_by_label("Enter your password").click()
-        page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
-        flushstd('pass FILLED')
-        time.sleep(3)
-        page.get_by_role("button", name="Next").click()
-        page.goto("https://stackoverflow.com/")
-        
-        time.sleep(3)
-        page.goto("https://stackoverflow.com/")
+
 
         time.sleep(3)
         # page.get_by_role("menuitem", name="Log in").click()
