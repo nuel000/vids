@@ -1,9 +1,9 @@
-name: Selenium Automation
+name: Playwright Automation
 on:
   workflow_dispatch:
 
 jobs:
-  run-selenium:
+  run-playwright:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,15 +18,12 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install selenium beautifulsoup4
+        pip install playwright beautifulsoup4
 
-    - name: Download Chrome Driver
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y chromium-chromedriver
-        sudo ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver
+    - name: Install Playwright Browsers
+      run: playwright install
 
-    - name: Run Selenium Script
+    - name: Run Playwright Script
       run: python app.py
 
     - name: Upload Screenshots
