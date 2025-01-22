@@ -9,13 +9,29 @@ def flushstd(message):
 
 def run(playwright: Playwright) -> None:
     try:
-        browser = playwright.firefox.launch(headless=True)
+
+        options = {
+        'args': [
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--disable-setuid-sandbox',
+            '--no-first-run',
+            '--no-sandbox',
+            '--no-zygote',
+            '--ignore-certificate-errors',
+            '--disable-extensions',
+            '--disable-infobars',
+            '--disable-notifications',
+            '--disable-popup-blocking',
+            '--remote-debugging-port=9222',
+            '--disable-blink-features=AutomationControlled',
+        ]
+        }
+
+        # Launch Chrome browser with options
+        browser = playwright.chromium.launch(**options, headless=True)
         context = browser.new_context()
         page = context.new_page()
-        
-        # Navigate to Google login
-        page.goto("https://www.google.com/search?q=google+ads+center&sca_esv=715c4e507116a0ae&source=hp&ei=HtSQZ-TQFNz5kdUPioHrgAE&iflsig=AL9hbdgAAAAAZ5DiLgNvoJyl0l1zFazQ8kMGajD_FA5Z&ved=0ahUKEwjk16_FmomLAxXcfKQEHYrAGhAQ4dUDCA4&uact=5&oq=google+ads+center&gs_lp=Egdnd3Mtd2l6IhFnb29nbGUgYWRzIGNlbnRlcjIFEAAYgAQyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB5IjDhQyRFY4jFwAXgAkAEAmAH-AaABqxmqAQYwLjEzLjS4AQPIAQD4AQGYAhKgAvQaqAIKwgIKEAAYAxjqAhiPAcICChAuGAMY6gIYjwHCAgsQABiABBixAxiDAcICERAuGIAEGLEDGNEDGIMBGMcBwgILEC4YgAQYsQMYgwHCAg4QABiABBixAxiDARiKBcICCBAAGIAEGLEDwgIOEC4YgAQYsQMY0QMYxwHCAhEQLhiABBixAxjRAxjHARiKBZgDGPEF7pn0mLaUFAGSBwUxLjkuOKAH3nQ&sclient=gws-wiz&sei=TdSQZ_CrDOX4kdUP692dmQ4")
-        time.sleep(3)
         page.goto("https://accounts.google.com")
         
         # Fill email
