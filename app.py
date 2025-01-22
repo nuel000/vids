@@ -1,4 +1,5 @@
 import sys
+import random
 from playwright.sync_api import Playwright, sync_playwright
 import time
 from bs4 import BeautifulSoup
