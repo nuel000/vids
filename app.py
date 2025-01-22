@@ -14,29 +14,28 @@ def run(playwright: Playwright) -> None:
         page = context.new_page()
         
         # Navigate to Google login
+        page.goto("https://www.google.com/search?q=google+ads+center&sca_esv=715c4e507116a0ae&source=hp&ei=HtSQZ-TQFNz5kdUPioHrgAE&iflsig=AL9hbdgAAAAAZ5DiLgNvoJyl0l1zFazQ8kMGajD_FA5Z&ved=0ahUKEwjk16_FmomLAxXcfKQEHYrAGhAQ4dUDCA4&uact=5&oq=google+ads+center&gs_lp=Egdnd3Mtd2l6IhFnb29nbGUgYWRzIGNlbnRlcjIFEAAYgAQyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB5IjDhQyRFY4jFwAXgAkAEAmAH-AaABqxmqAQYwLjEzLjS4AQPIAQD4AQGYAhKgAvQaqAIKwgIKEAAYAxjqAhiPAcICChAuGAMY6gIYjwHCAgsQABiABBixAxiDAcICERAuGIAEGLEDGNEDGIMBGMcBwgILEC4YgAQYsQMYgwHCAg4QABiABBixAxiDARiKBcICCBAAGIAEGLEDwgIOEC4YgAQYsQMY0QMYxwHCAhEQLhiABBixAxjRAxjHARiKBZgDGPEF7pn0mLaUFAGSBwUxLjkuOKAH3nQ&sclient=gws-wiz&sei=TdSQZ_CrDOX4kdUP692dmQ4")
+        time.sleep(3)
         page.goto("https://accounts.google.com")
         
         # Fill email
-        email_input = page.get_by_label("Email or phone")
-        
+        page.get_by_label("Email or phone").fill("momohemmanuel073")
+        time.sleep(3)
+        page.get_by_label("Email or phone").press("Enter")
         flushstd("EmailFilled")
         time.sleep(3)
-        
-        email_input.press("Enter")
+        page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
+        flushstd("passFilled")
+        time.sleep(3)
+        page.get_by_label("Enter your password").press("Enter")
         time.sleep(6)
-        flushstd("Enter Pressed")
         
         # Take screenshot
         screenshot_path = "screenshot.png"
         page.screenshot(path=screenshot_path)
         flushstd(f"Screenshot taken and saved as {screenshot_path}")
         
-        flushstd("Pssword filled")
-        time.sleep(3)
-        
-        page.get_by_label("Enter your password").press("Enter")
-        flushstd("Emted pressed")
-        time.sleep(6)
+
         
         # Navigate to Ad Center
         page.goto("https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en")
