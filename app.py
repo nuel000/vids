@@ -25,30 +25,25 @@ def run(playwright: Playwright) -> None:
         )  # Use headless=True for headless mode
         context = browser.new_context()
 
-    # Open a new page in the configured context
         page = context.new_page()
 
-    # Go to the desired URL
-        page.goto("https://stackoverflow.com/")  # Replace with the actual URL
-        time.sleep(3)
-        page.get_by_role("menuitem", name="Log in").click()
-        time.sleep(3)
-        page.get_by_role("button", name="Log in with Google").click()
-        time.sleep(3)
-        page.get_by_label("Email or phone").click()
-        time.sleep(3)
-        page.get_by_label("Email or phone").fill("momohemmanuel073")
-        time.sleep(3)
-        flushstd('Email Fillled')
-        page.get_by_label("Email or phone").press("Enter")
-        time.sleep(3)
-        page.get_by_label("Enter your password").click()
-        time.sleep(3)
-        page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
-        flushstd('Passs Fillled')
-        time.sleep(3)
-        page.get_by_role("button", name="Next").click()
         page.goto("https://stackoverflow.com/")
+        with page.expect_popup() as page1_info:
+            page.frame_locator("iframe[title=\"Sign in with Google Dialogue\"]").get_by_role("button", name="Continue").click()
+
+        time.sleep(3)
+        page1 = page1_info.value
+        page1.get_by_label("Email or phone").click()
+        page1.get_by_label("Email or phone").fill("momohemmanuel073")
+        page1.get_by_role("button", name="Next").click()
+        time.sleep(3)
+    
+        page1.get_by_label("Enter your password").click()
+        page1.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
+        time.sleep(3)
+        page1.get_by_role("button", name="Next").click()
+        time.sleep(3)
+        page1.close()
 
         
         s= BeautifulSoup(page.content(),'html.parser')
