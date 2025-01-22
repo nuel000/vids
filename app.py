@@ -40,6 +40,7 @@ def run(playwright: Playwright) -> None:
         page.get_by_label("Email or phone").press("Enter")
         flushstd("EmailFilled")
         time.sleep(3)
+        flushstd(page.content())
         page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
         flushstd("passFilled")
         time.sleep(3)
