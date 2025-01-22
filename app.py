@@ -17,7 +17,8 @@ def run(playwright: Playwright) -> None:
         page.goto("https://stackoverflow.com/")
         time.sleep(3)
         try:
-            page.frame_locator("iframe[title=\"Sign in with Google Dialogue\"]").get_by_label("Close").click()
+            page.wait_for_selector('xpath=//*[@id="close"]')
+            page.locator('xpath=//*[@id="close"]').click()
             flushstd('POP UP CLICKED')
         except:
             flushstd('Couldnt click pop up')
