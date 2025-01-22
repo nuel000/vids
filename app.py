@@ -9,53 +9,37 @@ def flushstd(message):
 
 def run(playwright: Playwright) -> None:
     try:
-
-
-        browser = playwright.chromium.launch(
-        headless=True,  # Set headless to True if you don't want a visible browser
-        args=[
-            '--disable-blink-features=AutomationControlled',
-            '--no-sandbox',  # May help in some environments
-            '--disable-web-security',  # Not recommended for production use
-            '--disable-infobars',  # Prevent infobars
-            '--disable-extensions',  # Disable extensions
-            '--start-maximized',  # Start maximized
-            '--window-size=1280,720'  # Set a specific window size
-        ]
-        )  # Use headless=True for headless mode
-        context = browser.new_context()
-
+        browser = playwright.firefox.launch(headless=True)  # Set headless=False for debugging
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        )
         page = context.new_page()
+        page.goto("https://accounts.google.com")
+        time.sleep(random.uniform(2, 5))  # Random delay to mimic human behavior
 
-        page.goto("https://stackoverflow.com/")
-        with page.expect_popup() as page1_info:
-            page.frame_locator("iframe[title=\"Sign in with Google Dialogue\"]").get_by_role("button", name="Continue").click()
+        # Fill in email
+        page.get_by_label("Email or phone").fill("momohemmanuel073")
+        time.sleep(random.uniform(1, 3))
+        page.get_by_label("Email or phone").press("Enter")
+        time.sleep(random.uniform(2, 5))
 
-        time.sleep(3)
-        page1 = page1_info.value
+        # Fill in password
+        page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
+        time.sleep(random.uniform(1, 3))
+        page.get_by_label("Enter your password").press("Enter")
+        flushstd('PASSSED')
+        time.sleep(random.uniform(5, 10))  # Wait for login to complete
 
-        time.sleep(3)
-        page1.close()
-
+        # Navigate to the target page
+        page.goto("https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en")
+        time.sleep(random.uniform(5, 10))
+        
         
         s= BeautifulSoup(page.content(),'html.parser')
         flushstd(s.text)
         time.sleep(3)
         
 
-
-        time.sleep(3)
-        # page.get_by_role("menuitem", name="Log in").click()
-        # time.sleep(3)
-        # page.get_by_role("button", name="Log in with Google").click()
-        # time.sleep(3)
-
-        # flushstd('password filled')
-        # time.sleep(3)
-        # page.get_by_role("button", name="Next").click()
-        # flushstd('Next Pressed')
-        # time.sleep(3)
-        # Take screenshot
         screenshot_path = "screenshot.png"
         page.screenshot(path=screenshot_path)
         flushstd(f"Screenshot taken and saved as {screenshot_path}")
