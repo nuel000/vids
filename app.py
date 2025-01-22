@@ -17,8 +17,8 @@ def run(playwright: Playwright) -> None:
         page.goto("https://stackoverflow.com/")
         time.sleep(3)
         try:
-            page.wait_for_selector('xpath=//*[@id="close"]')
-            page.locator('xpath=//*[@id="close"]').click()
+            page.wait_for_selector('xpath=/html/body/div/div[1]/div/div[2]/div[2]/div/button/div[2]')
+            page.locator('xpath=/html/body/div/div[1]/div/div[2]/div[2]/div/button/div[2]').click()
             flushstd('POP UP CLICKED')
         except:
             flushstd('Couldnt click pop up')
