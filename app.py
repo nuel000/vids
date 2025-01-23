@@ -15,7 +15,7 @@ def flushstd(message):
 def take_screenshot(driver, filename):
     """Take a screenshot and save it to the specified filename."""
     screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
-    os.makedirs(screenshot_dir, exist_ok=True)
+    os.makedirs(screenshot_dir, exist_ok=True)  # Create directory if it doesn't exist
     screenshot_path = os.path.join(screenshot_dir, filename)
     driver.save_screenshot(screenshot_path)
     flushstd(f"Screenshot saved: {screenshot_path}")
