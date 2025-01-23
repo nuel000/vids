@@ -1,5 +1,11 @@
 import undetected_chromedriver as uc
 import chromedriver_autoinstaller
+import time
+
+def flushstd(message):
+    print(message)
+    sys.stdout.flush()
+
 
 # Automatically install the correct version of ChromeDriver
 chromedriver_autoinstaller.install()
@@ -15,5 +21,8 @@ options.add_argument('--disable-infobars')
 
 # Launch the browser
 driver = uc.Chrome(options=options)
+time.sleep(5)
+driver.get('https://accounts.google.com/ServiceLogin')
+flushstd('Gotten to page')
 
 # Your scraping code here
