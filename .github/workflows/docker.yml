@@ -1,38 +1,17 @@
-name: Run Selenium Script
+name: Selenium Script with Docker
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Trigger manually
 
 jobs:
   selenium-job:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: Set Up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-
-    - name: Install Python Dependencies
+    - name: Set up Docker
       run: |
-        python3 -m pip install --upgrade pip
-        pip install undetected-chromedriver
-
-    - name: Install Chrome and ChromeDriver
-      run: |
-        # Install Chrome 114
-        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        sudo apt install -y ./google-chrome-stable_current_amd64.deb
-        rm google-chrome-stable_current_amd64.deb
-
-        # Install ChromeDriver 114
-        wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/local/bin/
-        rm chromedriver_linux64.zip
-
-    - name: Run Selenium Script
-      run: python3 app.py
+        docker build -t my-selenium-app .
+        docker run --rm my-selenium-app
