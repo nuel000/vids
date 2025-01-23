@@ -11,13 +11,20 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
+    - name: Set Up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
     - name: Install Dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y chromium-browser wget unzip jq
+        python3 -m pip install --upgrade pip
+        pip install undetected-chromedriver
 
-    - name: Install ChromeDriver
+    - name: Install Browser and ChromeDriver
       run: |
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser wget unzip
         wget -q https://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
         CHROME_DRIVER_VERSION=$(cat LATEST_RELEASE)
         wget https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
@@ -26,5 +33,4 @@ jobs:
         rm chromedriver_linux64.zip LATEST_RELEASE
 
     - name: Run Selenium Script
-      run: |
-        python3 app.py
+      run: python3 app.py
