@@ -2,6 +2,10 @@ import undetected_chromedriver as uc
 import chromedriver_autoinstaller
 import time
 import sys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from time import sleep
 
 def flushstd(message):
     print(message)
