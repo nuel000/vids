@@ -23,7 +23,51 @@ options.add_argument('--disable-infobars')
 # Launch the browser
 driver = uc.Chrome(options=options)
 time.sleep(5)
-driver.get('https://accounts.google.com/ServiceLogin')
-flushstd('Gotten to page')
+try:
+    # Clear all cookies
+    driver.delete_all_cookies()
+
+    # Navigate to login page
+    driver.get('https://accounts.google.com/ServiceLogin')
+
+    # Wait for email input and enter username
+    email_input = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//input[@type="email"]'))
+    )
+    email_input.clear()
+    email_input.send_keys(username)
+    flushstd('Username entered')
+
+
+
+    # Click next button
+    next_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//*[@id="identifierNext"]'))
+
+    )
+    next_button.click()
+    flushstd('NEXT BUTTON CLICKED')
+    sleep(10)
+
+
+    password_input = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//input[@type="password"]'))
+    )
+    password_input.clear()
+    password_input.send_keys(password)
+    flushstd('PAASSS ENTERED')
+
+    # Click password next button
+    password_next = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, '//*[@id="passwordNext"]'))
+    )
+    password_next.click()
+
+    # Wait and navigate to Gmail
+    WebDriverWait(driver, 10).until(
+        EC.url_contains('myaccount.google.com')
+    )
+    driver.get('https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en')
+
 
 # Your scraping code here
