@@ -1,29 +1,29 @@
 name: Run Selenium Script
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
-  run-selenium:
+  selenium-job:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout Repository
       uses: actions/checkout@v3
 
     - name: Install Dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y chromium-browser wget unzip jq
-        mkdir -p /home/runner/snap/chromium/common/.cache
 
-    - name: Setup ChromeDriver
+    - name: Install ChromeDriver
       run: |
-        CHROME_VERSION=$(chromium-browser --version | awk '{print $2}')
-        wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip
+        wget -q https://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
+        CHROME_DRIVER_VERSION=$(cat LATEST_RELEASE)
+        wget https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
         unzip chromedriver_linux64.zip
         sudo mv chromedriver /usr/local/bin/
-        rm chromedriver_linux64.zip
+        rm chromedriver_linux64.zip LATEST_RELEASE
 
     - name: Run Selenium Script
       run: |
