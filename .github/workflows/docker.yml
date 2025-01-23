@@ -1,39 +1,42 @@
-name: Scraping Workflow
+name: Run Playwright Script
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:  # Manually triggered
 
 jobs:
-  build:
+  run-script:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
 
-      - name: Build the Docker image
+      - name: Install dependencies
         run: |
-          docker build -t my-scraping-app .
+          python -m pip install --upgrade pip
+          pip install playwright beautifulsoup4
 
-      - name: Run the scraping container
+      - name: Install Playwright browsers
         run: |
-          docker run my-scraping-app
-          
-      - name: Debug Screenshots Directory
-        run: |
-          ls -R screenshots
+          playwright install
 
-      - name: Upload Screenshots
+      - name: Install Xvfb (for virtual display)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+
+      - name: Run Playwright script with Xvfb
+        run: |
+          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" python app.py
+
+      - name: Upload Screenshots (if any)
         uses: actions/upload-artifact@v3
         with:
-          name: login-screenshots
+          name: screenshots
           path: screenshots/
-        if: always()
+        if: always()  # Upload screenshots even if the job fails
