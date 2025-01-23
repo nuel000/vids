@@ -12,35 +12,8 @@ def flushstd(message):
     sys.stdout.flush()
 
 
+ page")
 
-def run(playwright) -> None:
-    # Launch the browser in non-headless mode (Xvfb will handle the display)
-    browser = playwright.firefox.launch(headless=False)
-    context = browser.new_context()
-    page = context.new_page()
-
-    try:
-        # Navigate to Google login page
-        page.goto("https://accounts.google.com")
-        print("Navigated to Google login page")
-        time.sleep(3)
-
-        # Fill in the email
-        page.get_by_label("Email or phone").fill("momohemmanuel073")
-        flushstd("Emailed Filled")
-        time.sleep(3)
-
-        # Click the "Next" button
-        page.get_by_label("Email or phone").press("Enter")
-        flushstd("NEXT Filled")
-        time.sleep(3)
-
-        # Fill in the password
-        s = BeautifulSoup(page.content(), 'html.parser')
-        flushstd(s.text)
-        page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
-        flushstd("PAASSS Filled")
-        time.sleep(3)
 
         # Click the "Next" button
         page.get_by_label("Enter your password").press("Enter")
