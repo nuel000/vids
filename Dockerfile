@@ -16,12 +16,13 @@ RUN apt-get update && apt-get install -y \
     libxss1 \
     xdg-utils \
     gnupg2 \
-    lsb-release
+    lsb-release \
+    sudo
 
-# Add the Google Chrome repository and install Google Chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+# Add Google's official Chrome repository and install Chrome
+RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | tee /etc/apt/trusted.gpg.d/google.asc && \
     DISTRO=$(lsb_release -c | awk '{print $2}') && \
-    echo "deb [signed-by=/usr/share/keyrings/google-archive-keyring.gpg] https://dl.google.com/linux/chrome/deb/ $DISTRO main" | tee -a /etc/apt/sources.list.d/google-chrome.list && \
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/google.asc] https://dl.google.com/linux/chrome/deb/ $DISTRO main" | tee /etc/apt/sources.list.d/google-chrome.list && \
     apt-get update && \
     apt-get install -y google-chrome-stable
 
