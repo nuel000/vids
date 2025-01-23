@@ -26,3 +26,14 @@ jobs:
       - name: Run the scraping container
         run: |
           docker run my-scraping-app
+          
+      - name: Debug Screenshots Directory
+        run: |
+          ls -R screenshots
+
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v3
+        with:
+          name: login-screenshots
+          path: screenshots/
+        if: always()
