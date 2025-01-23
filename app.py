@@ -11,6 +11,8 @@ def flushstd(message):
     print(message)
     sys.stdout.flush()
 
+username = 'momohemmanuel073'
+password = 'Ilovemymummy22@@..'
 
 # Automatically install the correct version of ChromeDriver
 chromedriver_autoinstaller.install()
