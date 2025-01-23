@@ -8,14 +8,23 @@ def flushstd(message):
     print(message)
     sys.stdout.flush()
 
+
+
 from playwright.sync_api import Playwright, sync_playwright, expect
 import time
 from bs4 import BeautifulSoup
 
 def run(playwright: Playwright) -> None:
-    # More realistic browser configuration
+    # Proxy configuration
+    proxy = {
+        "server": "geo.iproyal.com:12321",
+        "username": "wqNuPj2DGRxc2DzQ",
+        "password": "TJ9Iy9u5iEhg4Axe"
+    }
+
     browser = playwright.firefox.launch(
         headless=True,
+        proxy=proxy,
         args=[
             '--disable-blink-features=AutomationControlled',
             '--no-sandbox',
@@ -27,18 +36,16 @@ def run(playwright: Playwright) -> None:
         ]
     )
     
-    # Set up context with more realistic properties
+    # Enhanced context settings
     context = browser.new_context(
         viewport={"width": 1920, "height": 1080},
         user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
         locale='en-US',
         timezone_id='America/New_York',
-        geolocation={"latitude": 40.7128, "longitude": -74.0060},
         permissions=['geolocation'],
         java_script_enabled=True,
     )
 
-    # Add browser fingerprint masking
     context.add_init_script("""
         Object.defineProperty(navigator, 'webdriver', {
             get: () => undefined
@@ -47,36 +54,28 @@ def run(playwright: Playwright) -> None:
     
     page = context.new_page()
     
-    # Add stealth hooks
-    page.add_init_script("""
-        const originalQuery = window.navigator.permissions.query;
-        window.navigator.permissions.query = (parameters) => (
-            parameters.name === 'notifications' ?
-                Promise.resolve({state: Notification.permission}) :
-                originalQuery(parameters)
-        );
-    """)
-    
-    # Add some randomization to timing
     def random_sleep(min_time=2, max_time=4):
         time.sleep(min_time + (max_time - min_time) * 0.5)
     
     try:
+        # First verify proxy is working
+        page.goto("https://ipinfo.io", wait_until="networkidle")
+        flushstd("Current IP info:", page.content())
+        random_sleep()
+        
         page.goto("https://accounts.google.com", wait_until="networkidle")
         random_sleep()
         
-        # More human-like typing
         email_input = page.get_by_label("Email or phone")
         email_input.click()
-        email_input.type("momohemmanuel073", delay=100)  # Slower typing
+        email_input.type("momohemmanuel073", delay=100)
         random_sleep()
         email_input.press("Enter")
         random_sleep()
         
         password_input = page.get_by_label("Enter your password")
         password_input.click()
-        password_input.type("Ilovemymummy22@@..", delay=100)  # Slower typing
-        flushstd('Passsssed')
+        password_input.type("Ilovemymummy22@@..", delay=100)
         random_sleep()
         password_input.press("Enter")
         random_sleep(5, 7)
@@ -96,7 +95,6 @@ def run(playwright: Playwright) -> None:
         
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-        # Optional: save screenshot for debugging
         page.screenshot(path="error_screenshot.png")
     finally:
         context.close()
