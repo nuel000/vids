@@ -1,6 +1,7 @@
 import undetected_chromedriver as uc
 import chromedriver_autoinstaller
 import time
+import sys
 
 def flushstd(message):
     print(message)
