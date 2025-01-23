@@ -68,6 +68,12 @@ try:
         EC.url_contains('myaccount.google.com')
     )
     driver.get('https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en')
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+finally:
+    # Always close the browser
+    driver.quit()
 
 
 # Your scraping code here
