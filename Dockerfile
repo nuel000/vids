@@ -1,33 +1,15 @@
-# Use an official Python image as a base image
-FROM python:3.9-slim
+# Use the official Playwright image as the base image
+FROM mcr.microsoft.com/playwright:focal
 
-# Install dependencies for Chromium
-RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    unzip \
-    ca-certificates \
-    fonts-liberation \
-    libappindicator3-1 \
-    libasound2 \
-    libx11-xcb1 \
-    libnspr4 \
-    libnss3 \
-    libxss1 \
-    xdg-utils \
-    chromium
-
-# Set up the working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy your script into the container
-COPY . /app
+# Copy the script and requirements file
+COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Install chromedriver-autoinstaller
-RUN pip install chromedriver-autoinstaller
+# Install Python and dependencies
+RUN apt-get update && apt-get install -y python3 python3-pip
+RUN pip3 install beautifulsoup4
 
 # Run the script
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
