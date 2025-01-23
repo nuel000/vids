@@ -17,7 +17,8 @@ options.add_argument('--disable-blink-features=AutomationControlled')
 options.add_argument('--disable-infobars')
 
 # Launch the browser
-driver = uc.Chrome(options=options)
+driver = uc.Chrome(options=options, driver_executable_path="/usr/local/bin/chromedriver")
+
 
 try:
     # Clear all cookies
