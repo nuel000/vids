@@ -36,6 +36,8 @@ def run(playwright) -> None:
         time.sleep(3)
 
         # Fill in the password
+        s = BeautifulSoup(page.content(), 'html.parser')
+        flushstd(s.text)
         page.get_by_label("Enter your password").fill("Ilovemymummy22@@..")
         flushstd("PAASSS Filled")
         time.sleep(3)
