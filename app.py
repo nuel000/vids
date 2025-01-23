@@ -64,6 +64,8 @@ try:
     next_button.click()
     flushstd('Next button clicked')
     sleep(5)  # Add delay to mimic human behavior
+    page_text = driver.find_element(By.TAG_NAME, "body").text
+    flushstd(page_text)
 
     # Take a screenshot after clicking the "Next" button
     take_screenshot(driver, 'after_next_button_click.png')
