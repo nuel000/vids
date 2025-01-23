@@ -29,4 +29,4 @@ jobs:
         echo 'export PATH=$PATH:/usr/lib/chromium-browser/' >> $GITHUB_ENV
 
     - name: Run Selenium script
-      run: app.py
+      run: python app.py
