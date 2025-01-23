@@ -1,104 +1,117 @@
-import sys
-import random
-from playwright.sync_api import Playwright, sync_playwright
+import logging
+import undetected_chromedriver as uc
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import WebDriverException
 import time
-from bs4 import BeautifulSoup
+import os
 
-def flushstd(message):
-    print(message)
-    sys.stdout.flush()
+# Configure logging
+logging.basicConfig(level=logging.INFO, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-
-
-from playwright.sync_api import Playwright, sync_playwright, expect
-import time
-from bs4 import BeautifulSoup
-
-def run(playwright: Playwright) -> None:
-    # Proxy configuration
-    proxy = {
-        "server": "geo.iproyal.com:12321",
-        "username": "wqNuPj2DGRxc2DzQ",
-        "password": "TJ9Iy9u5iEhg4Axe"
-    }
-
-    browser = playwright.firefox.launch(
-        headless=True,
-        proxy=proxy,
-        args=[
-            '--disable-blink-features=AutomationControlled',
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-infobars',
-            '--window-position=0,0',
-            '--ignore-certifcate-errors',
-            '--ignore-certifcate-errors-spki-list',
-        ]
-    )
+def setup_driver():
+    """Set up Chrome driver for GitHub Actions environment"""
+    logger.info("Setting up Chrome driver...")
+    options = uc.ChromeOptions()
     
-    # Enhanced context settings
-    context = browser.new_context(
-        viewport={"width": 1920, "height": 1080},
-        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
-        locale='en-US',
-        timezone_id='America/New_York',
-        permissions=['geolocation'],
-        java_script_enabled=True,
-    )
+    # GitHub Actions specific configurations
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--headless')
+    options.add_argument('--disable-blink-features=AutomationControlled')
+    options.add_argument('--disable-infobars')
+    
+    return uc.Chrome(options=options)
 
-    context.add_init_script("""
-        Object.defineProperty(navigator, 'webdriver', {
-            get: () => undefined
-        });
-    """)
-    
-    page = context.new_page()
-    
-    def random_sleep(min_time=2, max_time=4):
-        time.sleep(min_time + (max_time - min_time) * 0.5)
-    
+def login_to_google(driver, username, password):
+    """Perform Google login with detailed logging and error handling"""
     try:
-        # First verify proxy is working
-        page.goto("https://ipinfo.io", wait_until="networkidle")
-        flushstd("Current IP info:", page.content())
-        random_sleep()
+        logger.info("Navigating to Google login page...")
+        driver.get('https://accounts.google.com/ServiceLogin')
         
-        page.goto("https://accounts.google.com", wait_until="networkidle")
-        random_sleep()
+        # Email input
+        logger.info("Entering username...")
+        email_input = WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.XPATH, '//input[@type="email"]'))
+        )
+        email_input.clear()
+        email_input.send_keys(username)
         
-        email_input = page.get_by_label("Email or phone")
-        email_input.click()
-        email_input.type("momohemmanuel073", delay=100)
-        random_sleep()
-        email_input.press("Enter")
-        random_sleep()
+        # Next button
+        logger.info("Clicking next button...")
+        next_button = WebDriverWait(driver, 15).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="identifierNext"]'))
+        )
+        next_button.click()
         
-        password_input = page.get_by_label("Enter your password")
-        password_input.click()
-        password_input.type("Ilovemymummy22@@..", delay=100)
-        random_sleep()
-        password_input.press("Enter")
-        random_sleep(5, 7)
+        # Wait for password page
+        time.sleep(5)
         
-        page.goto("https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en", 
-                 wait_until="networkidle")
-        random_sleep()
+        # Password input
+        logger.info("Entering password...")
+        password_input = WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.XPATH, '//input[@type="password"]'))
+        )
+        password_input.clear()
+        password_input.send_keys(password)
         
-        s = BeautifulSoup(page.content(), 'html.parser')
-        google_account_info = s.find('div', class_='KT87l').text
-        others = s.find('ul', class_='NBZP0e cIN7te xbmkib').text
+        # Login button
+        logger.info("Clicking login button...")
+        password_next = WebDriverWait(driver, 15).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="passwordNext"]'))
+        )
+        password_next.click()
         
-        print(google_account_info)
-        print(others)
+        # Wait for login
+        WebDriverWait(driver, 15).until(
+            EC.url_contains('myaccount.google.com')
+        )
         
-        random_sleep(5, 7)
+        logger.info("Login successful!")
+        return True
+    
+    except Exception as e:
+        logger.error(f"Login failed: {e}")
+        return False
+
+def main():
+    # Hardcoded credentials for testing
+    username = 'momohemmanuel073'
+    password = 'Ilovemymummy22@@..'
+    
+    driver = None
+    try:
+        driver = setup_driver()
+        
+        # Perform login
+        if login_to_google(driver, username, password):
+            # Navigate to desired page
+            driver.get('https://myadcenter.google.com/controls?ref=my-account&ref-media=WEB&hl=en')
+            
+            # Optional: Take screenshot
+            screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
+            os.makedirs(screenshot_dir, exist_ok=True)
+            screenshot_path = os.path.join(screenshot_dir, 'login_success.png')
+            driver.save_screenshot(screenshot_path)
+            logger.info(f"Screenshot saved to {screenshot_path}")
         
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        page.screenshot(path="error_screenshot.png")
+        logger.error(f"An unexpected error occurred: {e}")
+        
+        # Save error screenshot
+        screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
+        os.makedirs(screenshot_dir, exist_ok=True)
+        error_screenshot_path = os.path.join(screenshot_dir, 'error_screenshot.png')
+        driver.save_screenshot(error_screenshot_path)
+        logger.info(f"Error screenshot saved to {error_screenshot_path}")
+    
     finally:
-        context.close()
-        browser.close()
+        if driver:
+            driver.quit()
 
-with sync_playwright() as playwright:
-    run(playwright)
+if __name__ == "__main__":
+    main()
