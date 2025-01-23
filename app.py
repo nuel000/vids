@@ -1,4 +1,4 @@
-import undetected_chromedriver.v2 as uc
+import undetected_chromedriver as uc
 import chromedriver_autoinstaller
 
 # Automatically install the correct version of ChromeDriver
