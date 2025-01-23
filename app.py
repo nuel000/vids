@@ -13,7 +13,6 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 def setup_driver():
-    """Set up Chrome driver for GitHub Actions environment"""
     logger.info("Setting up Chrome driver...")
     options = uc.ChromeOptions()
     
@@ -25,7 +24,8 @@ def setup_driver():
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument('--disable-infobars')
     
-    return uc.Chrome(options=options)
+    # Specify Chrome version if needed
+    return uc.Chrome(version_main=131, options=options)
 
 def login_to_google(driver, username, password):
     """Perform Google login with detailed logging and error handling"""
