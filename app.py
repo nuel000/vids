@@ -8,16 +8,14 @@ username = 'momohemmanuel073'
 password = 'Ilovemymummy22@@..'
 
 # Options for headless mode and stealth
+
 options = uc.ChromeOptions()
 options.add_argument('--headless')  # Run in headless mode
 options.add_argument('--disable-gpu')  # Disable GPU acceleration
-options.add_argument('--no-sandbox')  # Bypass OS security model, required for cloud environments
-options.add_argument('--disable-dev-shm-usage')  # Overcome limited resource problems
-options.add_argument('--disable-blink-features=AutomationControlled')
-options.add_argument('--disable-infobars')
+options.add_argument('--no-sandbox')  # Bypass OS security model
 
-# Launch the browser
-driver = uc.Chrome(options=options, driver_executable_path="/usr/local/bin/chromedriver")
+# Pass the exact ChromeDriver version
+driver = uc.Chrome(version_main=114, options=options)
 
 
 try:
