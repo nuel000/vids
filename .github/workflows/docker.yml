@@ -1,7 +1,7 @@
 name: Run Selenium Script
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   selenium-job:
@@ -16,21 +16,23 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install Dependencies
+    - name: Install Python Dependencies
       run: |
         python3 -m pip install --upgrade pip
         pip install undetected-chromedriver
 
-    - name: Install Browser and ChromeDriver
+    - name: Install Chrome and ChromeDriver
       run: |
-        sudo apt-get update
-        sudo apt-get install -y chromium-browser wget unzip
-        wget -q https://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
-        CHROME_DRIVER_VERSION=$(cat LATEST_RELEASE)
-        wget https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
+        # Install Chrome 114
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install -y ./google-chrome-stable_current_amd64.deb
+        rm google-chrome-stable_current_amd64.deb
+
+        # Install ChromeDriver 114
+        wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
         unzip chromedriver_linux64.zip
         sudo mv chromedriver /usr/local/bin/
-        rm chromedriver_linux64.zip LATEST_RELEASE
+        rm chromedriver_linux64.zip
 
     - name: Run Selenium Script
       run: python3 app.py
